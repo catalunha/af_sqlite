@@ -4,13 +4,13 @@ import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 
 class DatabaseSqlite {
-  Future<void> openConnection() async {
+  Future<Database> openConnection() async {
     final databasePath = await getDatabasesPath();
     final databasePathFinal = join(databasePath, 'db_af_sqlite');
     // print(databasePathFinal);
-    openDatabase(
+    return openDatabase(
       databasePathFinal,
-      version: 1,
+      version: 2,
       onConfigure: (db) async {
         log('ccc> DatabaseSqlite.openDatabase.onConfigure');
         await db.execute('PRAGMA foreign_keys = ON');
@@ -32,11 +32,11 @@ class DatabaseSqlite {
         log('ccc> DatabaseSqlite.openDatabase.onUpgrade');
       },
       onDowngrade: (Database db, int oldVersion, int version) {
-        if (oldVersion == 1) {
-          final batch = db.batch();
-          batch.execute('drop table produto');
-          batch.commit();
-        }
+        // if (oldVersion == 1) {
+        //   final batch = db.batch();
+        //   batch.execute('drop table produto');
+        //   batch.commit();
+        // }
         log('ccc> DatabaseSqlite.openDatabase.onDowngrade');
       },
     );
